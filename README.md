@@ -151,8 +151,16 @@ Fetch a message, using a consumer group, there is a short delay while the group 
 ```shell
 /opt/kafka/bin/kafka-console-consumer.sh \
   --bootstrap-server ${FLY_APP_NAME}.flycast:9092 \
+  --consumer-property fetch.max.wait.ms=15000 \
   --group test-consumer-group \
-  --topic test
+  --topic test \
+  --from-beginning \
+  --property print.timestamp=true \
+  --property print.key=true \
+  --property print.offset=true \
+  --property print.partition=true \
+  --property print.headers=true \
+  --property print.value=true
 ```
 
 If you wait a minute or so, the [Tansu](https://tansu.io/) brokers will shut down automatically: scaling to zero.
