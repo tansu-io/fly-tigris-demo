@@ -63,8 +63,13 @@ Your app is ready! Deploy with `flyctl deploy`
 Tansu can use any S3 compatible or PostgreSQL database for storage.
 In this demo we will use [Tigris](https://fly.io/docs/tigris/) as it
 is integrated with [fly](https://fly.io). Create a new S3 bucket
-on Tigris using `fly storage create`, picking a name of your choice,
-or using the default:
+on Tigris using:
+
+```shell
+fly storage create
+```
+
+Picking a name of your choice, or using the default:
 
 ```shell
 ? Choose a name, use the default, or leave blank to generate one: tansu
@@ -80,7 +85,14 @@ BUCKET_NAME: tansu
 Secrets are staged for the first deployment
 ```
 
-Some secrets have been created, which you can verify with `fly secrets list`:
+Some secrets have been created, which you can verify with
+
+```shell
+fly secrets list
+```
+
+Our [fly.toml](https://github.com/tansu-io/fly-tigris-demo/blob/c01bef2a4bb18a153cf37aa1e81c0f3157fb9bd2/fly.toml#L14) is
+already setup to use these secrets when communicating to Tigris S3:
 
 ```shell
 NAME                    DIGEST                  CREATED AT 
@@ -98,35 +110,46 @@ to connect with the Tansu brokers:
 fly ips allocate-v6 --private
 ```
 
-Finally, deploy the application onto fly with:
+Finally, deploy the application onto [fly](https://fly.io) with:
 
 ```shell
 fly deploy
 ```
 
-Start an interactive shell so that we can use the Apache Kafka&reg; Java client to connect to Tansu:
+Start an interactive shell using the Apache Kafka&reg; Java client to connect to Tansu:
 
 ```shell
 fly machine run --shell apache/kafka:3.9.0
 ```
 
-Create a topic, note that our `bootstrap-server` is `${FLY_APP_NAME}.flycast:9092` using the private
-IPv6 [flycast](https://fly.io/docs/networking/flycast/) address we allocated earlier:
+Create a test topic, note that our `bootstrap-server` is `${FLY_APP_NAME}.flycast:9092` using the
+[flycast](https://fly.io/docs/networking/flycast/) address allocated earlier:
 
 ```
-/opt/kafka/bin/kafka-topics.sh --bootstrap-server ${FLY_APP_NAME}.flycast:9092 --partitions=3 --replication-factor=1 --create --topic test
+/opt/kafka/bin/kafka-topics.sh \
+  --bootstrap-server ${FLY_APP_NAME}.flycast:9092 \
+  --partitions=3 \
+  --replication-factor=1 \
+  --create \
+  --topic test
 ```
 
 Produce a message:
 
 ```
-echo "hello world" | /opt/kafka/bin/kafka-console-producer.sh --bootstrap-server ${FLY_APP_NAME}.flycast:9092 --topic test
+echo "hello world" | \
+/opt/kafka/bin/kafka-console-producer.sh \
+  --bootstrap-server ${FLY_APP_NAME}.flycast:9092 \
+  --topic test
 ```
 
-Fetch a message, note that this using a consumer group, and there is a short delay while the group is formed:
+Fetch a message, using a consumer group, there is a short delay while the group is formed:
 
 ```shell
-/opt/kafka/bin/kafka-console-consumer.sh --bootstrap-server ${FLY_APP_NAME}.flycast:9092 --group test-consumer-group --topic test
+/opt/kafka/bin/kafka-console-consumer.sh \
+  --bootstrap-server ${FLY_APP_NAME}.flycast:9092 \
+  --group test-consumer-group \
+  --topic test
 ```
 
 If you wait a minute or so, the [Tansu](https://tansu.io/) brokers will shut down automatically: scaling to zero.
@@ -135,9 +158,13 @@ S3 using [optimistic concurrency control](https://en.wikipedia.org/wiki/Optimist
 made possible with [conditional write](https://www.tigrisdata.com/blog/s3-conditional-writes/) support,
 offered by most S3 vendors.
 
-You can verify whether the brokers are running using `fly machines ls` and checking that they're all `stopped`.
+You can verify whether the brokers are still running using:
 
-If you now run:
+```shell
+fly machines ls
+``` 
+
+Checking that they're all `stopped`. If you now run:
 
 ```shell
 /opt/kafka/bin/kafka-topics.sh --bootstrap-server ${FLY_APP_NAME}.flycast:9092 --list
