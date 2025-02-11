@@ -163,6 +163,14 @@ Fetch a message, using a consumer group, there is a short delay while the group 
   --property print.value=true
 ```
 
+The consumer should output:
+
+```shell
+CreateTime:SOME_TIME	Partition:1	Offset:0	NO_HEADERS	null	hello world
+```
+
+Hit `^C` a couple of times to exit the consumer.
+
 If you wait a minute or so, the [Tansu](https://tansu.io/) brokers will shut down automatically: scaling to zero.
 The brokers are *stateless*, without the overhead of distributed consensus. All data is persisted in
 S3 using [optimistic concurrency control](https://en.wikipedia.org/wiki/Optimistic_concurrency_control),
