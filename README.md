@@ -9,7 +9,7 @@ In this demo we deploy Tansu on [fly](https://fly.io) using their
 that the broker *can* be shutdown between API requests. We use
 [flycast](https://fly.io/docs/networking/flycast/) to spin up (and down)
 brokers *automatically*. Automatically scaling to zero: No more idle brokers!
-Stateless also means that we can scale up instantly without the overhead
+Stateless also means that we elastically scale without the overhead
 of distributed consensus.
 
 Firstly, download and install the [fly](https://fly.io)
