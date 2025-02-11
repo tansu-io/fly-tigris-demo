@@ -3,12 +3,14 @@
 [Tansu](https://tansu.io/) is an Apache Kafka&reg; compatible
 streaming platform with JSON/Protobuf schema validation,
 supporting PostgreSQL, S3 or memory storage engines.
-In this demo we will deploy Tansu on [fly](https://fly.io) using their
+In this demo we deploy Tansu on [fly](https://fly.io) using their
 [integrated S3 service from Tigris](https://fly.io/docs/tigris/).
 [Tansu](https://tansu.io/) is a *stateless* broker, meaning
 that the broker *can* be shutdown between API requests. We use
 [flycast](https://fly.io/docs/networking/flycast/) to spin up (and down)
 brokers *automatically*. Automatically scaling to zero: No more idle brokers!
+Stateless also means that we can scale up instantly without the overhead
+of distributed consensus.
 
 Firstly, download and install the [fly](https://fly.io)
 command line with [these instructions](https://fly.io/docs/flyctl/install/).
@@ -23,6 +25,7 @@ fly launch --from https://github.com/tansu-io/fly-tigris-demo --no-deploy
 ```
 
 When asked `? Would you like to copy its configuration to the new app?`, hit `Y`.
+
 When asked `? Do you want to tweak these settings before proceeding?`, hit `N`.
 
 Output will look be something like:
@@ -60,9 +63,10 @@ Your app is ready! Deploy with `flyctl deploy`
 ```
 
 Tansu can use any S3 compatible or PostgreSQL database for storage.
-In this demo we will use [Tigris](https://fly.io/docs/tigris/) as it
-is integrated with [fly](https://fly.io). Create a new S3 bucket
-on Tigris using:
+In this demo we will use [Tigris](https://fly.io/docs/tigris/) which
+is integrated with [fly](https://fly.io).
+
+Create a new S3 bucket on Tigris using:
 
 ```shell
 fly storage create
@@ -84,7 +88,7 @@ BUCKET_NAME: tansu
 Secrets are staged for the first deployment
 ```
 
-Some secrets have been created, which you can verify with
+Some secrets have been created, which you can verify with:
 
 ```shell
 fly secrets list
