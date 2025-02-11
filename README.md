@@ -1,11 +1,10 @@
-# Tansu demo on Fly.io with Tigris.io S3 Compatible Storage
+# Tansu demo on Fly with Tigris S3
 
 [Tansu](https://tansu.io/) is an Apache Kafka&reg; compatible
 streaming platform with JSON/Protobuf schema validation,
 supporting PostgreSQL, S3 or memory storage engines.
 In this demo we will deploy Tansu on [fly](https://fly.io) using their
 [integrated S3 service from Tigris](https://fly.io/docs/tigris/).
-
 [Tansu](https://tansu.io/) is a *stateless* broker, meaning
 that the broker *can* be shutdown between API requests. We use
 [flycast](https://fly.io/docs/networking/flycast/) to spin up (and down)
@@ -175,3 +174,7 @@ There is a short delay while waiting
 for the broker to become ready. In environments where such a delay isn't acceptable, scaling
 to one may be appropriate (using `fly scale`). Brokers can also run in multiple regions without
 overhead because they are *stateless*.
+
+Licensed under the [GNU AGPL](https://www.gnu.org/licenses/agpl-3.0.en.html),
+Tansu is written in 100% safe 🦺 async 🚀 [Rust](https://www.rust-lang.org) 🦀
+and [is available on GitHub](https://github.com/tansu-io/tansu).
