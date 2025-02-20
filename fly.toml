@@ -1,41 +1,45 @@
+# fly.toml app configuration file generated for tansu on 2025-02-20T18:51:28Z
+#
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
 app = 'tansu'
+primary_region = 'lhr'
 
 [build]
-image = 'ghcr.io/tansu-io/tansu:pr-165'
+  image = 'ghcr.io/tansu-io/tansu:main'
 
 [env]
-RUST_LOG = 'warn,tansu_server=debug,tansu_storage=debug,tansu_schema_registry=debug'
-AWS_ENDPOINT = "https://fly.storage.tigris.dev"
-ADVERTISED_LISTENER_URL = "tcp://${FLY_APP_NAME}.flycast:9092/"
-CLUSTER_ID = "tansu-fly-tigris"
-STORAGE_ENGINE = "s3://${BUCKET_NAME}"
+  ADVERTISED_LISTENER_URL = 'tcp://${FLY_APP_NAME}.flycast:9092/'
+  AWS_ENDPOINT = 'https://fly.storage.tigris.dev'
+  CLUSTER_ID = 'tansu-fly-tigris'
+  RUST_LOG = 'warn,tansu_server=debug,tansu_storage=debug,tansu_schema_registry=debug'
+  STORAGE_ENGINE = 's3://${BUCKET_NAME}'
 
 [[services]]
-protocol = 'tcp'
-internal_port = 9092
-auto_stop_machines = 'stop'
-auto_start_machines = true
-min_machines_running = 0
+  protocol = 'tcp'
+  internal_port = 9092
+  auto_stop_machines = 'stop'
+  auto_start_machines = true
+  min_machines_running = 0
+
+  [[services.ports]]
+    port = 9092
 
 [checks]
-[checks.tcp_listener]
-grace_period = "30s"
-interval = "15s"
-port = 9092
-timeout = "10s"
-type = "tcp"
-
-[metrics]
-port = 9100
-path = "/metrics"
-
-[[services.ports]]
-port = 9092
+  [checks.tcp_listener]
+    port = 9092
+    type = 'tcp'
+    interval = '15s'
+    timeout = '10s'
+    grace_period = '30s'
 
 [[vm]]
-memory = '256'
-cpu_kind = 'shared'
-cpus = 1
+  memory = '256'
+  cpu_kind = 'shared'
+  cpus = 1
+
+[[metrics]]
+  port = 9100
+  path = '/metrics'
+  https = false
